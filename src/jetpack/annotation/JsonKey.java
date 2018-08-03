@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
  * @since 080218
  */
 
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface JsonKey {
 
 }
