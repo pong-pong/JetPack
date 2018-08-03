@@ -7,5 +7,5 @@ package jetpack;
  */
 
 public enum FormatType {
-
+    OBJECT, KEY
 }
