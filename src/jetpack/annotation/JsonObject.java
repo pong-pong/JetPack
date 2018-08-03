@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
  * @since 080218
  */
 
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface JsonObject {
-
+    FormatType formatBy() default FormatType.OBJECT;
 }
