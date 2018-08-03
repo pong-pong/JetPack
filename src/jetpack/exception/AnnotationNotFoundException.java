@@ -6,6 +6,8 @@ package jetpack.exception;
  * @since 030818
  */
 
-public class AnnotationNotFoundException {
-
+public class AnnotationNotFoundException extends Exception {
+    public AnnotationNotFoundException(Object object) {
+        super("at " + object.getClass().toString());
+    }
 }
