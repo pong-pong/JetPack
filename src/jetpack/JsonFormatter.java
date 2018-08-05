@@ -1,5 +1,8 @@
 package jetpack;
 
+import jetpack.annotation.JsonKey;
+import jetpack.annotation.JsonObject;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
@@ -41,21 +44,30 @@ public class JsonFormatter {
      * @see jetpack.FormatType
      */
     private static FormatType getFormatType(Object o, FormatType t) {
+        FormatType r = null;
         Class c = o.getClass();
-        return null;
+        if (t != null) {
+            if (t.equals(FormatType.OBJECT)) r = c.getAnnotation(JsonObject.class) != null ? FormatType.OBJECT : null;
+            else r = isAnnotationExistsAtFields(c) ? FormatType.KEY : null;
+        } else {
+            if (c.getAnnotation(JsonObject.class) != null)
+                r = ((JsonObject) c.getAnnotation(JsonObject.class)).formatBy();
+            else
+                r = isAnnotationExistsAtFields(c) ? FormatType.KEY : null;
+        }
+        return r;
     }
 
     /**
      * Check if the annotation exists at fields
      *
      * @param c the class to check
-     * @param a the annotation to check
      * @return true if exists
      */
-    private static boolean isAnnotationExistsAtFields(Class c, Class<? extends Annotation> a) {
+    private static boolean isAnnotationExistsAtFields(Class c) {
         boolean r = false;
         for (Field f : c.getDeclaredFields()) {
-            if (f.getAnnotation(a) != null) {
+            if (f.getAnnotation(JsonKey.class) != null) {
                 r = true;
                 break;
             }
