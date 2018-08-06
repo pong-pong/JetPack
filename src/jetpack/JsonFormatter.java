@@ -3,7 +3,6 @@ package jetpack;
 import jetpack.annotation.JsonKey;
 import jetpack.annotation.JsonObject;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
@@ -17,23 +16,50 @@ public class JsonFormatter {
     /**
      * Format target object to JSON string
      *
-     * @param o        the object to format
-     * @param t        the format type of o
-     * @param nullable whether nullable of value
+     * @param k the name of value
+     * @param o the object to format
+     * @param t the format type of o
+     * @param n whether nullable of value
      * @return the formatted string
      */
-    public static String toJSON(Object o, FormatType t, boolean nullable) {
+    public static String toJSON(String k, Object o, FormatType t, boolean n) {
         int oInstanceType = getInstanceType(o);
-
+        FormatType oFormatType = getFormatType(o, t);
+        StringBuilder s = new StringBuilder("{");
         if (oInstanceType != -1) {
+            if (oInstanceType == 1) {
 
-        } else if (o instanceof Object[]) {
+            } else if (oInstanceType == 2) {
 
+            } else if (oInstanceType == 3) {
+
+            } else {
+
+            }
         } else {
-
+            Class c = o.getClass();
+            if (oFormatType.equals(FormatType.OBJECT))
+                for (Field f : c.getDeclaredFields())
+                    formatInfo(o, s, f, n);
+            else if (oFormatType.equals(FormatType.KEY))
+                for (Field f : c.getDeclaredFields())
+                    if (f.getAnnotation(JsonKey.class) != null)
+                        formatInfo(o, s, f, n);
         }
+        if (s.substring(s.length() - 2, s.length()).equals(", ")) return s.substring(0, s.length() - 2) + "}";
+        else return s.toString() + "}";
+    }
 
-        return null;
+    /**
+     * Format target field
+     *
+     * @param o the object to get value from
+     * @param s the string builder to append formatted info
+     * @param f the field to get value
+     * @param n whether nullable of value
+     */
+    private static void formatInfo(Object o, StringBuilder s, Field f, boolean n) {
+
     }
 
     /**
