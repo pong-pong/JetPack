@@ -50,6 +50,10 @@ public class JsonFormatter {
         else return s.toString() + "}";
     }
 
+    public static String toJSON(Object o, boolean n) {
+        return toJSON(null, o, null, n);
+    }
+
     /**
      * Format target field
      *
@@ -62,7 +66,7 @@ public class JsonFormatter {
         f.setAccessible(true);
         try {
             if (f.get(o) != null && !n) {
-
+                
             } else {
 
             }
@@ -80,10 +84,23 @@ public class JsonFormatter {
      * @param n whether nullable of value
      */
     private static void append(Object o, StringBuilder s, Field f, boolean n) {
-        if(f.getType().isArray()){
-
-        }else{
-
+        try {
+            Object i = f.get(o);
+            int t = getInstanceType(o);
+            if (f.getType().isArray()) {
+                s.append(f.getName()).append(": ");
+                StringBuilder tmp = new StringBuilder("[");
+                Object[] arr = (Object[]) f.get(o);
+                if (t == 1) for (Object c : arr) tmp.append(i).append(", ");
+                else if (t == 3) for (Object c : arr) tmp.append("\"").append(i).append("\", ");
+                else for (Object c : arr) tmp.append(toJSON(c, n)).append(", ");
+            } else {
+                if (t == 1) s.append(f.getName()).append(": ").append(i).append(", ");
+                else if (t == 3) s.append(f.getName()).append(": ").append("\"").append(i).append("\", ");
+                else if (i == null && n) s.append(f.getName()).append(": ").append("null").append(", ");
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -101,10 +118,8 @@ public class JsonFormatter {
             if (t.equals(FormatType.OBJECT)) r = c.getAnnotation(JsonObject.class) != null ? FormatType.OBJECT : null;
             else r = isAnnotationExistsAtFields(c) ? FormatType.KEY : null;
         } else {
-            if (c.getAnnotation(JsonObject.class) != null)
-                r = ((JsonObject) c.getAnnotation(JsonObject.class)).formatBy();
-            else
-                r = isAnnotationExistsAtFields(c) ? FormatType.KEY : null;
+            if (c.getAnnotation(JsonObject.class) != null) r = ((JsonObject) c.getAnnotation(JsonObject.class)).formatBy();
+            else r = isAnnotationExistsAtFields(c) ? FormatType.KEY : null;
         }
         return r;
     }
@@ -137,9 +152,9 @@ public class JsonFormatter {
             return 0;
         else if (o instanceof Integer || o instanceof Long || o instanceof Short || o instanceof Byte || o instanceof Boolean || o instanceof Float || o instanceof Double)
             return 1;
-        else if (o instanceof String[] || o instanceof Character[])
+        else if (o instanceof String[] || o instanceof Character[] || o instanceof Enum[])
             return 2;
-        else if (o instanceof String || o instanceof Character)
+        else if (o instanceof String || o instanceof Character || o instanceof Enum)
             return 3;
         else
             return -1;
