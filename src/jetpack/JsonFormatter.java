@@ -6,6 +6,8 @@ import jetpack.exception.AnnotationNotFoundException;
 import jetpack.exception.MissingKeyNameException;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author pongpong
@@ -140,18 +142,21 @@ public class JsonFormatter {
     private static void append(Object o, StringBuilder s, Field f, boolean n) throws MissingKeyNameException, AnnotationNotFoundException {
         try {
             Object i = f.get(o);
-            int t = getInstanceType(o);
+            int t = getInstanceType(i);
             if (f.getType().isArray()) {
                 s.append(f.getName()).append(": ");
                 StringBuilder tmp = new StringBuilder("[");
                 Object[] arr = (Object[]) f.get(o);
-                if (t == 1) for (Object c : arr) tmp.append(i).append(", ");
-                else if (t == 3) for (Object c : arr) tmp.append("\"").append(i).append("\", ");
-                else for (Object c : arr) tmp.append(toJSON(c, n)).append(", ");
+                if (t == 1) for (Object c : arr) tmp.append(c).append(", ");
+                else if (t == 3) for (Object c : arr) tmp.append("\"").append(c).append("\", ");
+                if ((arr == null || arr.length == 0) && n) tmp.append("null").append(", ");
+                else for (Object c : Objects.requireNonNull(arr)) tmp.append(toJSON(c, n)).append(", ");
+                if (s.substring(s.length() - 2, s.length()).equals(", ")) s.append(tmp.substring(0, s.length() - 2)).append("]");
+                else s.append(tmp.append("]").toString());
             } else {
                 if (t == 1) s.append(f.getName()).append(": ").append(i).append(", ");
                 else if (t == 3) s.append(f.getName()).append(": ").append("\"").append(i).append("\", ");
-                else if (i == null && n) s.append(f.getName()).append(": ").append("null").append(", ");
+                if (i == null && n) s.append(f.getName()).append(": ").append("null").append(", ");
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -166,7 +171,7 @@ public class JsonFormatter {
      * @see jetpack.FormatType
      */
     private static FormatType getFormatType(Object o, FormatType t) {
-        FormatType r = null;
+        FormatType r;
         Class c = o.getClass();
         if (t != null) {
             if (t.equals(FormatType.OBJECT)) r = c.getAnnotation(JsonObject.class) != null ? FormatType.OBJECT : null;
