@@ -59,7 +59,32 @@ public class JsonFormatter {
      * @param n whether nullable of value
      */
     private static void formatInfo(Object o, StringBuilder s, Field f, boolean n) {
+        f.setAccessible(true);
+        try {
+            if (f.get(o) != null && !n) {
 
+            } else {
+
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Append field value to the string builder
+     *
+     * @param o the object to get value from
+     * @param s the string builder to append formatted info
+     * @param f the field to get value
+     * @param n whether nullable of value
+     */
+    private static void append(Object o, StringBuilder s, Field f, boolean n) {
+        if(f.getType().isArray()){
+
+        }else{
+
+        }
     }
 
     /**
