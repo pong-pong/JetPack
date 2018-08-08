@@ -25,6 +25,8 @@ public class JsonFormatter {
      * @param t the format type of o
      * @param n whether nullable of value : default false
      * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
      */
     public static String toJSON(String k, Object o, FormatType t, boolean n) throws AnnotationNotFoundException, MissingKeyNameException {
         int oInstanceType = getInstanceType(o);
@@ -35,7 +37,7 @@ public class JsonFormatter {
             StringBuilder tmp = new StringBuilder(k + ": ");
             if (oInstanceType == 0) {
                 if (!(o instanceof Object[])) {
-
+                    System.out.println(Arrays.toString(((Object[]) o)));
                 } else {
                     tmp.append("[");
                     Object[] arr = (Object[]) o;
@@ -68,46 +70,151 @@ public class JsonFormatter {
         else return s.toString() + "}";
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param o the object to format
+     * @param t the format type of o
+     * @param n whether nullable of value : default false
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(Object o, FormatType t, boolean n) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(null, o, t, n);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param o the object to format
+     * @param t the format type of o
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(Object o, FormatType t) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(null, o, t, false);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param o the object to format
+     * @param n whether nullable of value : default false
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(Object o, boolean n) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(null, o, null, n);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param k the key name of value
+     * @param o the object to format
+     * @param t the format type of o
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(String k, Object o, FormatType t) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(k, o, t, false);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param k the key name of value
+     * @param o the object to format
+     * @param n whether nullable of value : default false
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(String k, Object o, boolean n) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(k, o, null, n);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param k the key name of value
+     * @param o the object to format
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(String k, Object o) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(k, o, null, false);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param o the object to format
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(Object o) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(null, o, null, false);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param k the key name of value
+     * @param o the object to format
+     * @param t the format type of o
+     * @param n whether nullable of value : default false
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(String k, Object[] o, FormatType t, boolean n) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(k, (Object) o, t, n);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param k the key name of value
+     * @param o the object to format
+     * @param t the format type of o
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(String k, Object[] o, FormatType t) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(k, (Object) o, t, false);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param k the key name of value
+     * @param o the object to format
+     * @param n whether nullable of value : default false
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(String k, Object[] o, boolean n) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(k, (Object) o, null, n);
     }
 
+    /**
+     * Format target object to JSON string
+     *
+     * @param k the key name of value
+     * @param o the object to format
+     * @return the formatted string
+     * @throws AnnotationNotFoundException when necessary annotation not found at target object
+     * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
+     */
     public static String toJSON(String k, Object[] o) throws AnnotationNotFoundException, MissingKeyNameException {
         return toJSON(k, (Object) o, null, false);
     }
@@ -151,7 +258,8 @@ public class JsonFormatter {
                 else if (t == 3) for (Object c : arr) tmp.append("\"").append(c).append("\", ");
                 if ((arr == null || arr.length == 0) && n) tmp.append("null").append(", ");
                 else for (Object c : Objects.requireNonNull(arr)) tmp.append(toJSON(c, n)).append(", ");
-                if (s.substring(s.length() - 2, s.length()).equals(", ")) s.append(tmp.substring(0, s.length() - 2)).append("]");
+                if (s.substring(s.length() - 2, s.length()).equals(", "))
+                    s.append(tmp.substring(0, s.length() - 2)).append("]");
                 else s.append(tmp.append("]").toString());
             } else {
                 if (t == 1) s.append(f.getName()).append(": ").append(i).append(", ");
