@@ -108,7 +108,7 @@ public void main(String[] args){
 ### `toJSON()` 메소드 
 ``` Java
 public static toJSON(String k, Object o, FormatType t, boolean n) throws AnnotationNotFoundException, MissingKeyNameException {
-  //...
+  /...
 }
 ```
 

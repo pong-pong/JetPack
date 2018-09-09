@@ -24,7 +24,7 @@ public class JsonFormatter {
      * @param o the object to format
      * @param t the format type of o
      * @param n whether nullable of value : default false
-     * @return the formatted strin g
+     * @return the formatted string
      * @throws AnnotationNotFoundException when necessary annotation not found at target object
      * @throws MissingKeyNameException     when key name is missing ; if target object is basic type(primitive, string, wrapper)
      */
